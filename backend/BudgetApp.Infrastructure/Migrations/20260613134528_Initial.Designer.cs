@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260613122016_Initial")]
+    [Migration("20260613134528_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,19 +29,23 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("character varying(3)");
+                        .HasColumnType("character varying(3)")
+                        .HasColumnName("code");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_currencies");
 
                     b.HasIndex("Code")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_currencies_code");
 
                     b.ToTable("currencies", (string)null);
                 });
@@ -50,40 +54,52 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
 
                     b.Property<int?>("CategoryId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("category_id");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
 
                     b.Property<int?>("DestinationWalletId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("destination_wallet_id");
 
                     b.Property<int?>("SourceWalletId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("source_wallet_id");
 
                     b.Property<int>("TransactionType")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("transaction_type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_transactions");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_transactions_category_id");
 
-                    b.HasIndex("DestinationWalletId");
+                    b.HasIndex("DestinationWalletId")
+                        .HasDatabaseName("ix_transactions_destination_wallet_id");
 
-                    b.HasIndex("SourceWalletId");
+                    b.HasIndex("SourceWalletId")
+                        .HasDatabaseName("ix_transactions_source_wallet_id");
 
                     b.ToTable("transactions", (string)null);
                 });
@@ -92,24 +108,30 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
                     b.Property<int?>("ParentId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("parent_id");
 
                     b.Property<int>("Type")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_transaction_categories");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("ParentId")
+                        .HasDatabaseName("ix_transaction_categories_parent_id");
 
                     b.ToTable("transaction_categories", (string)null);
                 });
@@ -118,26 +140,33 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CurrencyId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("currency_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
                     b.Property<int>("WalletTypeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("wallet_type_id");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_wallets");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CurrencyId")
+                        .HasDatabaseName("ix_wallets_currency_id");
 
-                    b.HasIndex("WalletTypeId");
+                    b.HasIndex("WalletTypeId")
+                        .HasDatabaseName("ix_wallets_wallet_type_id");
 
                     b.ToTable("wallets", (string)null);
                 });
@@ -146,16 +175,19 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_wallet_types");
 
                     b.ToTable("wallet_types", (string)null);
                 });
@@ -165,17 +197,20 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasOne("BudgetApp.Domain.Entities.TransactionCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_transactions_transaction_categories_category_id");
 
                     b.HasOne("BudgetApp.Domain.Entities.Wallet", "DestinationWallet")
                         .WithMany()
                         .HasForeignKey("DestinationWalletId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_transactions_wallets_destination_wallet_id");
 
                     b.HasOne("BudgetApp.Domain.Entities.Wallet", "SourceWallet")
                         .WithMany()
                         .HasForeignKey("SourceWalletId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_transactions_wallets_source_wallet_id");
 
                     b.Navigation("Category");
 
@@ -189,7 +224,8 @@ namespace BudgetApp.Infrastructure.Migrations
                     b.HasOne("BudgetApp.Domain.Entities.TransactionCategory", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_transaction_categories_transaction_categories_parent_id");
 
                     b.Navigation("Parent");
                 });
@@ -200,13 +236,15 @@ namespace BudgetApp.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_wallets_currencies_currency_id");
 
                     b.HasOne("BudgetApp.Domain.Entities.WalletType", "WalletType")
                         .WithMany()
                         .HasForeignKey("WalletTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_wallets_wallet_types_wallet_type_id");
 
                     b.Navigation("Currency");
 

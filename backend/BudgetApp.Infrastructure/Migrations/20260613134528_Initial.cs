@@ -16,33 +16,33 @@ namespace BudgetApp.Infrastructure.Migrations
                 name: "currencies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
+                    code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_currencies", x => x.Id);
+                    table.PrimaryKey("pk_currencies", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "transaction_categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    ParentId = table.Column<int>(type: "integer", nullable: true)
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    parent_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_transaction_categories", x => x.Id);
+                    table.PrimaryKey("pk_transaction_categories", x => x.id);
                     table.ForeignKey(
-                        name: "FK_transaction_categories_transaction_categories_ParentId",
-                        column: x => x.ParentId,
+                        name: "fk_transaction_categories_transaction_categories_parent_id",
+                        column: x => x.parent_id,
                         principalTable: "transaction_categories",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -50,39 +50,39 @@ namespace BudgetApp.Infrastructure.Migrations
                 name: "wallet_types",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_wallet_types", x => x.Id);
+                    table.PrimaryKey("pk_wallet_types", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "wallets",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    WalletTypeId = table.Column<int>(type: "integer", nullable: false),
-                    CurrencyId = table.Column<int>(type: "integer", nullable: false)
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    wallet_type_id = table.Column<int>(type: "integer", nullable: false),
+                    currency_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_wallets", x => x.Id);
+                    table.PrimaryKey("pk_wallets", x => x.id);
                     table.ForeignKey(
-                        name: "FK_wallets_currencies_CurrencyId",
-                        column: x => x.CurrencyId,
+                        name: "fk_wallets_currencies_currency_id",
+                        column: x => x.currency_id,
                         principalTable: "currencies",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_wallets_wallet_types_WalletTypeId",
-                        column: x => x.WalletTypeId,
+                        name: "fk_wallets_wallet_types_wallet_type_id",
+                        column: x => x.wallet_type_id,
                         principalTable: "wallet_types",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -90,74 +90,74 @@ namespace BudgetApp.Infrastructure.Migrations
                 name: "transactions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
-                    TransactionType = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    SourceWalletId = table.Column<int>(type: "integer", nullable: true),
-                    DestinationWalletId = table.Column<int>(type: "integer", nullable: true),
-                    CategoryId = table.Column<int>(type: "integer", nullable: true)
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    amount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    transaction_type = table.Column<int>(type: "integer", nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    source_wallet_id = table.Column<int>(type: "integer", nullable: true),
+                    destination_wallet_id = table.Column<int>(type: "integer", nullable: true),
+                    category_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_transactions", x => x.Id);
+                    table.PrimaryKey("pk_transactions", x => x.id);
                     table.ForeignKey(
-                        name: "FK_transactions_transaction_categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "fk_transactions_transaction_categories_category_id",
+                        column: x => x.category_id,
                         principalTable: "transaction_categories",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_transactions_wallets_DestinationWalletId",
-                        column: x => x.DestinationWalletId,
+                        name: "fk_transactions_wallets_destination_wallet_id",
+                        column: x => x.destination_wallet_id,
                         principalTable: "wallets",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_transactions_wallets_SourceWalletId",
-                        column: x => x.SourceWalletId,
+                        name: "fk_transactions_wallets_source_wallet_id",
+                        column: x => x.source_wallet_id,
                         principalTable: "wallets",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_currencies_Code",
+                name: "ix_currencies_code",
                 table: "currencies",
-                column: "Code",
+                column: "code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_transaction_categories_ParentId",
+                name: "ix_transaction_categories_parent_id",
                 table: "transaction_categories",
-                column: "ParentId");
+                column: "parent_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_transactions_CategoryId",
+                name: "ix_transactions_category_id",
                 table: "transactions",
-                column: "CategoryId");
+                column: "category_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_transactions_DestinationWalletId",
+                name: "ix_transactions_destination_wallet_id",
                 table: "transactions",
-                column: "DestinationWalletId");
+                column: "destination_wallet_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_transactions_SourceWalletId",
+                name: "ix_transactions_source_wallet_id",
                 table: "transactions",
-                column: "SourceWalletId");
+                column: "source_wallet_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_wallets_CurrencyId",
+                name: "ix_wallets_currency_id",
                 table: "wallets",
-                column: "CurrencyId");
+                column: "currency_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_wallets_WalletTypeId",
+                name: "ix_wallets_wallet_type_id",
                 table: "wallets",
-                column: "WalletTypeId");
+                column: "wallet_type_id");
         }
 
         /// <inheritdoc />
