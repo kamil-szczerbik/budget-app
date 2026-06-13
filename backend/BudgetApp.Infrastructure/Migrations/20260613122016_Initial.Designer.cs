@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260611175731_Initial")]
+    [Migration("20260613122016_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -35,15 +35,15 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("currencies", (string)null);
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Entities.Transaction", b =>
@@ -55,7 +55,8 @@ namespace BudgetApp.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
@@ -64,7 +65,8 @@ namespace BudgetApp.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int?>("DestinationWalletId")
                         .HasColumnType("integer");
@@ -77,7 +79,13 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Transactions");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("DestinationWalletId");
+
+                    b.HasIndex("SourceWalletId");
+
+                    b.ToTable("transactions", (string)null);
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Entities.TransactionCategory", b =>
@@ -90,9 +98,10 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Type")
@@ -100,7 +109,9 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionCategories");
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("transaction_categories", (string)null);
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Entities.Wallet", b =>
@@ -116,14 +127,19 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("WalletTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Wallets");
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("WalletTypeId");
+
+                    b.ToTable("wallets", (string)null);
                 });
 
             modelBuilder.Entity("BudgetApp.Domain.Entities.WalletType", b =>
@@ -136,11 +152,70 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("WalletTypes");
+                    b.ToTable("wallet_types", (string)null);
+                });
+
+            modelBuilder.Entity("BudgetApp.Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("BudgetApp.Domain.Entities.TransactionCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BudgetApp.Domain.Entities.Wallet", "DestinationWallet")
+                        .WithMany()
+                        .HasForeignKey("DestinationWalletId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BudgetApp.Domain.Entities.Wallet", "SourceWallet")
+                        .WithMany()
+                        .HasForeignKey("SourceWalletId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Category");
+
+                    b.Navigation("DestinationWallet");
+
+                    b.Navigation("SourceWallet");
+                });
+
+            modelBuilder.Entity("BudgetApp.Domain.Entities.TransactionCategory", b =>
+                {
+                    b.HasOne("BudgetApp.Domain.Entities.TransactionCategory", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("BudgetApp.Domain.Entities.Wallet", b =>
+                {
+                    b.HasOne("BudgetApp.Domain.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BudgetApp.Domain.Entities.WalletType", "WalletType")
+                        .WithMany()
+                        .HasForeignKey("WalletTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("WalletType");
+                });
+
+            modelBuilder.Entity("BudgetApp.Domain.Entities.TransactionCategory", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

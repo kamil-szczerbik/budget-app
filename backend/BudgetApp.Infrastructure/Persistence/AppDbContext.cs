@@ -10,4 +10,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<TransactionCategory> TransactionCategories => Set<TransactionCategory>();
     public DbSet<Wallet> Wallets => Set<Wallet>();
     public DbSet<WalletType> WalletTypes => Set<WalletType>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
 }
