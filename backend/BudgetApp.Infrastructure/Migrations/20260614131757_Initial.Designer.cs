@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BudgetApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260613134528_Initial")]
+    [Migration("20260614131757_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -39,6 +39,16 @@ namespace BudgetApp.Infrastructure.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)")
                         .HasColumnName("code");
+
+                    b.Property<byte>("DecimalPlaces")
+                        .HasColumnType("smallint")
+                        .HasColumnName("decimal_places");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("symbol");
 
                     b.HasKey("Id")
                         .HasName("pk_currencies");
@@ -145,9 +155,23 @@ namespace BudgetApp.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
                     b.Property<int>("CurrencyId")
                         .HasColumnType("integer")
                         .HasColumnName("currency_id");
+
+                    b.Property<DateTime?>("DeactivatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deactivated_at");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()

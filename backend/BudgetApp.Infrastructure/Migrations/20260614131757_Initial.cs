@@ -18,7 +18,9 @@ namespace BudgetApp.Infrastructure.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false)
+                    code = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
+                    symbol = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    decimal_places = table.Column<byte>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,6 +68,9 @@ namespace BudgetApp.Infrastructure.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    created_at = table.Column<DateTime>(type: "timestamptz", nullable: false),
+                    deactivated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     wallet_type_id = table.Column<int>(type: "integer", nullable: false),
                     currency_id = table.Column<int>(type: "integer", nullable: false)
                 },

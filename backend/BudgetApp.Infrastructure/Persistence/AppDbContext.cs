@@ -1,4 +1,5 @@
 using BudgetApp.Domain.Entities;
+using BudgetApp.Infrastructure.Seeding.Seeders;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Infrastructure.Persistence;
@@ -13,6 +14,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        // 1
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        // 2
+        CurrencySeeder.Seed(modelBuilder);
+        TransactionCategorySeeder.Seed(modelBuilder);
     }
 }

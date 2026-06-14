@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Seeding\Data\transactionCategories.json" />
     <ProjectReference Include="..\BudgetApp.Domain\BudgetApp.Domain.csproj" />
+    <EmbeddedResource Include="Seeding\Data\currencies.json" />
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,14 @@ public class WalletConfiguration : IEntityTypeConfiguration<Wallet>
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(x => x.IsActive)
+            .IsRequired()
+            .HasDefaultValue(true);
+
+        builder.Property(x => x.CreatedAt)
+            .IsRequired()
+            .HasColumnType("timestamptz");
+
         builder.HasOne(x => x.Currency)
             .WithMany()
             .HasForeignKey(x => x.CurrencyId)

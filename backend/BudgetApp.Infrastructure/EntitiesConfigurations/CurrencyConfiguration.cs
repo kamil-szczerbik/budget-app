@@ -16,6 +16,13 @@ public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
             .IsRequired()
             .HasMaxLength(3);
 
+        builder.Property(x => x.Symbol)
+            .IsRequired()
+            .HasMaxLength(10);
+
+        builder.Property(x => x.DecimalPlaces)
+            .IsRequired();
+
         builder.HasIndex(x => x.Code)
             .IsUnique();
     }
