@@ -1,9 +1,9 @@
+using BudgetApp.Domain.Base;
+
 namespace BudgetApp.Domain.Entities;
 
-public class Wallet
+public class Wallet : Entity
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -1,6 +1,6 @@
 export type Transaction = {
-   id: number;
-   date: Date;
-   amount: number;
-   description?: string;
+  readonly id: number;
+  readonly date: Date;
+  readonly amount: number;
+  readonly description?: string;
 };

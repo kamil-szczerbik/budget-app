@@ -1,3 +1,4 @@
+using BudgetApp.Api;
 using BudgetApp.Infrastructure;
 using BudgetApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 builder.Services.AddDbContext<AppDbContext>(options =>
         options
             .UseNpgsql(builder.Configuration.GetConnectionString("BudgetDb"))

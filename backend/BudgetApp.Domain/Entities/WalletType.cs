@@ -1,8 +1,8 @@
+using BudgetApp.Domain.Base;
+
 namespace BudgetApp.Domain.Entities;
 
-public class WalletType
+public class WalletType : Entity
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
 }
